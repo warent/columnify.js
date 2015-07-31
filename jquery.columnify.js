@@ -1,16 +1,16 @@
 jQuery.fn.extend({
+
 	/*
-		Options:
-			columnWidth
-			item
-			evenHeight = true
-	*/
+	 * Columnify our container and items therein
+	 * @param {Object} options
+	 * @param {int} options.columnWidth - The static width of the columns to calculate how many columns shall be generated. Always in pixels
+	 * @param {string} options.item - The item identifier by class or ID to columnify
+	 */
 	columnify: function(options) {
 
-		var _col_adding_elements = false;
-
+		// If we try to columnify somewhere in the middle of the document, it will cause scroll issues
+		// So we simply save the scroll location here
 		var _col_keep_scroll = $(window).scrollTop();
-
 		// Grab our initial content
 		var _col_content = $(this).html();
 		// Our column code
@@ -53,12 +53,6 @@ jQuery.fn.extend({
 		for (var i = 0; i < _col_number_of_columns; i++) {
 			$(this).append(_col_new_column);
 		}
-		
-		// Maintain the order of our divs
-		/*$($(_col_content).filter(options.item)).each(function(i, obj) {
-			$(this).data("sort", i);
-			console.log($(this).data("sort"));
-		});*/
 
 		// Lets go ahead and iterate our items to columnify
 		$($(_col_content).filter(options.item)).each(function(i, obj) {
@@ -83,19 +77,20 @@ jQuery.fn.extend({
 			}
 		});
 
+		// Scroll back to where we were for a seamless experience
 		$(window).scrollTop(_col_keep_scroll);
 	},
 
-	columnifyClear: function() {
-		$("._col_column").each(function() {
-			$(this).remove();
-		});
-	},
-
+	/*
+	 * Columnify our container and items therein
+	 * @param {Object} options
+	 * @param {string} options.item - The item identifier by class or ID to columnify
+	 */
 	columnifyAdd: function(options) {
 
+		// All of our items
 		var _col_content = options.items;
-
+		// Column container
 		var _col_container = this;
 		// If evenHeight = false, use this to cycle indices instead of height
 		var _col_column_index = -1;
@@ -128,5 +123,13 @@ jQuery.fn.extend({
 			    else if (!options.prepend) $(columnHeightsSorted[0]["column"]).append($(obj));
 			}
 		});
+	},
+
+	// Remove all columns and the content therein
+	columnifyClear: function() {
+		$("._col_column").each(function() {
+			$(this).remove();
+		});
 	}
+
 });
